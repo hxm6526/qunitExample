@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Qunit test for simple</title>
+    <link rel="stylesheet" href="../css/qunit-1.18.0.css">
+    <script src="../../node_modules/qunitjs/qunit/qunit.js"></script>
+    <script src="../../static-content/js/jquery-1.9.1.js"></script>
+    <script src="../../static-content/js/simple.js"></script>
+    <!--<script src="../../node_modules/sinon/lib/sinon.js"></script>-->
+
+
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<script type="text/javascript">
+    var mockHtml = function () {
+        var html = '';
+        html += '<div><input id ="username"><br/><br/>'
+        html += '<input id="password"><br/><br/>'
+        html += '<button type="button" id="submit">submit</button>'
+        html += '</div>'
+        html += '<div><p id = "errMsg"></p>';
+        $('#qunit-fixture').html(html);
+    };
+    var cleanHtlm = function () {
+        $('#qunit-fixture').html('');
+    };
+    QUnit.begin(function (details) {
+        console.log("\n------------------------------------------------------------------------------------------------------------------");
+        console.log("QUnit Start Suite: home collections competitivehotels\n");
+    });
+    QUnit.done(function (details) {
+        console.log("\nQUnit Complete Suite - Total: home competitivehotels - Total:", details.total, " Failed:", details.failed, " Passed:", details.passed, " Runtime:", details.runtime);
+        console.log("------------------------------------------------------------------------------------------------------------------\n");
+    });
+    QUnit.testStart(function (details) {
+        console.log("Now running: ", details.module, details.name);
+    });
+
+
+    QUnit.module("test btnVerifyClick function", {
+        setup: function () {
+            var html = '';
+                html += '<div><input id ="username"><br/><br/>'
+                html += '<input id="password"><br/><br/>'
+                html += '<button type="button" id="submit">submit</button>'
+                html += '</div>'
+                html += '<div><p id = "errMsg"></p>';
+            $('#qunit-fixture').html(html);
+
+        },
+        teardown: function () {
+            $('#qunit-fixture').html('');
+        }
+    });
+
+    QUnit.test("it will return false and show errMsg when username is null ", function (assert) {
+        mockHtml();
+        var result = btnVerifyClick();
+        assert.ok(!result);
+        assert.equal($("#errMsg").html(), 'Please input user name first.')
+        cleanHtlm();
+    });
+
+    QUnit.test("it will return false and show errMsg when username is not null and password < 3",
+        function (assert) {
+            mockHtml();
+            $('#username').attr('value','admin');
+            $('#password').attr('value','12');
+            var result = btnVerifyClick();
+            assert.ok(!result);
+            assert.equal($("#errMsg").html(), 'Please input password between 5~10')
+            cleanHtlm();
+    });
+    QUnit.test("it will return false and show errMsg when username is not null and password > 10",
+        function (assert) {
+            mockHtml();
+            $('#username').attr('value','admin');
+            $('#password').attr('value','12345678901');
+            var result = btnVerifyClick();
+            assert.ok(!result);
+            assert.equal($("#errMsg").html(), 'Please input password between 5~10')
+            cleanHtlm();
+    });
+
+    QUnit.test("it will return false and show errMsg when username is not null and 3 <= password <= 10",
+        function (assert) {
+            mockHtml();
+            $('#username').attr('value','admin');
+            $('#password').attr('value','1234567890');
+            var result = btnVerifyClick();
+            assert.ok(result);
+            assert.equal($("#errMsg").html(), 'username and password is right')
+            cleanHtlm();
+    });
+
+ </script>
+</body>
+</html>
